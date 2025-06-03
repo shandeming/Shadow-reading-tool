@@ -1,3 +1,8 @@
+# For Shadowing Practice
+
+Features:
+1. Does not save files, no extra operations, designed solely for shadowing practice
+
 # 用于影子跟读
 
 特点：
