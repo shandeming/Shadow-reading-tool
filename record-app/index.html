@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>录音工具</title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', 'SimSun', 'Arial Unicode MS', sans-serif;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>影子跟读录音工具</h1>
+    <button id="start-record">开始录音</button>
+    <button id="playback">回放录音</button>
+    <button id="re-record">重新录音</button>
+    <h2 id="recording-duration">录音时长: 0 秒</h2>
+    <progress id="progress-bar" value="0" max="100" style="width: 100%;"></progress>
+    <script src="renderer.js"></script>
+</body>
+
+</html>
