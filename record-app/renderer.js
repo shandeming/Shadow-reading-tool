@@ -9,6 +9,7 @@ let audio;
 let recordingInterval;
 let recordingDuration = 0;
 let recordingAnimationId = null; // 用于控制录音进度动画帧
+let lastRecordingDuration = 0; // 记录上一次录音的时长
 
 const recordButton = document.getElementById('start-record');
 const playbackButton = document.getElementById('playback');
@@ -30,8 +31,8 @@ recordButton.addEventListener('click', async () => {
                     cancelAnimationFrame(recordingAnimationId);
                     recordingAnimationId = null;
                 }
-                recordingDuration = 0; // Reset recording duration
-                document.getElementById('recording-duration').textContent = '录音时长: 0 秒'; // Reset duration display
+                lastRecordingDuration = recordingDuration; // 记录本次录音时长
+                document.getElementById('recording-duration').textContent = `录音时长: ${Math.floor(lastRecordingDuration)} 秒`;
                 progressBar.value = 0; // Reset progress bar
 
                 audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
@@ -117,8 +118,8 @@ reRecordButton.addEventListener('click', async () => {
                 cancelAnimationFrame(recordingAnimationId);
                 recordingAnimationId = null;
             }
-            recordingDuration = 0; // Reset recording duration
-            document.getElementById('recording-duration').textContent = '录音时长: 0 秒'; // Reset duration display
+            lastRecordingDuration = recordingDuration; // 记录本次录音时长
+            document.getElementById('recording-duration').textContent = `录音时长: ${Math.floor(lastRecordingDuration)} 秒`;
             progressBar.value = 0; // Reset progress bar
 
             audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
@@ -169,25 +170,32 @@ reRecordButton.addEventListener('click', async () => {
 
 playbackButton.addEventListener('click', () => {
     if (audio) {
+        audio.currentTime = 0;
         audio.play();
         console.log('Playback started');
-
-        playbackButton.style.display = 'none'; // Hide playback button during playback
-        reRecordButton.style.display = 'inline'; // Show re-record button during playback
-
+        playbackButton.style.display = 'inline';
+        reRecordButton.style.display = 'inline';
+        // 回放时显示上次录音时长
+        document.getElementById('recording-duration').textContent = `录音时长: ${Math.floor(lastRecordingDuration)} 秒`;
         const updateProgress = () => {
             progressBar.value = (audio.currentTime / audio.duration) * 100;
-            if (!audio.paused && !audio.ended) {
+            if (!audio.ended) {
                 requestAnimationFrame(updateProgress);
-            } else {
-                playbackButton.style.display = 'inline'; // Show playback button after playback ends
             }
         };
-        requestAnimationFrame(updateProgress); // Use requestAnimationFrame for smoother updates
+        requestAnimationFrame(updateProgress);
     } else {
         console.log('No audio to play');
     }
 });
+
+// 允许回放中点击“回放”按钮重新播放
+playbackButton.onclick = () => {
+    if (audio) {
+        audio.currentTime = 0;
+        audio.play();
+    }
+};
 
 // Initially hide playback and re-record buttons
 playbackButton.style.display = 'none';
