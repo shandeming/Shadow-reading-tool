@@ -1,4 +1,4 @@
-# For Shadowing Practice
+# For Shadowing Reading
 
 Features:
 1. Does not save files, no extra operations, designed solely for shadowing practice
